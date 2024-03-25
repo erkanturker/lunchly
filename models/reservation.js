@@ -15,6 +15,37 @@ class Reservation {
     this.notes = notes;
   }
 
+  set numGuests(val) {
+    if (val < 1) throw new Error("Number of quest should be more 1");
+    this._numGuests = val;
+  }
+
+  get numGuests() {
+    return this._numGuests;
+  }
+
+  set customerId(val) {
+    if (this._customerId !== undefined) {
+      throw new Error("customer id cannot be changed");
+    }
+    this._customerId = val;
+  }
+  get customerId() {
+    return this._customerId;
+  }
+
+  set startAt(val) {
+    if (val instanceof Date && !isNaN(val)) {
+      this._startAt = val;
+    } else {
+      throw Error("Date type required");
+    }
+  }
+
+  get startAt() {
+    return this._startAt;
+  }
+
   /** formatter for startAt */
 
   getformattedStartAt() {

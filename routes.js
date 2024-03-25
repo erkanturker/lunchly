@@ -28,6 +28,15 @@ router.get("/add/", async function (req, res, next) {
   }
 });
 
+router.get("/getTopTen/", async function (req, res, next) {
+  try {
+    const customers = await Customer.getTopTenCustomers();
+    return res.render("customer_list.html", { customers });
+  } catch (error) {
+    return next(error);
+  }
+});
+
 /** Handle adding a new customer. */
 
 router.post("/add/", async function (req, res, next) {
@@ -116,6 +125,15 @@ router.post("/search/", async (req, res, next) => {
   const name = req.body.search;
   const customers = await Customer.searchCustomerByName(name);
   return res.render("customer_list.html", { customers });
+});
+
+router.get("/getTopTen/", async function (req, res, next) {
+  try {
+    const customers = await Customer.getTopTenCustomers();
+    return res.render("customer_list.html", { customers });
+  } catch (error) {
+    return next(error);
+  }
 });
 
 module.exports = router;

@@ -14,8 +14,30 @@ class Customer {
     this.notes = notes;
   }
 
+  set notes(val) {
+    this._notes = val || "";
+  }
+
+  get notes() {
+    return this._notes;
+  }
+
   get fullName() {
     return `${this.firstName} ${this.lastName}`;
+  }
+
+  static async getTopTenCustomers() {
+    const results = await db.query(`
+      SELECT c.id, c.first_name AS "firstName", c.last_name AS "lastName",
+             c.phone, c.notes, COUNT(c.id) AS count
+      FROM customers AS c
+      LEFT JOIN reservations AS r ON c.id = r.customer_id
+      GROUP BY c.id
+      ORDER BY COUNT(c.id) DESC
+      LIMIT 10;
+    `);
+
+    return results.rows.map((r) => new Customer(r));
   }
 
   /** find all customers. */
