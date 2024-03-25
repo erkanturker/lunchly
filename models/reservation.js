@@ -53,7 +53,7 @@ class Reservation {
   }
   getFormattedNormal() {
     return moment(this.startAt).format("YYYY-MM-DD hh:mm a");
-}
+  }
 
   /** given a customer id, find their reservations. */
 
@@ -87,12 +87,19 @@ class Reservation {
   }
 
   async save() {
-    const result = await db.query(
-      `INSERT INTO reservations (customer_id,start_at,num_guests,notes)
+    if (this.id === undefined) {
+      const result = await db.query(
+        `INSERT INTO reservations (customer_id,start_at,num_guests,notes)
       VALUES ($1,$2,$3,$4) RETURNING id`,
-      [this.customerId, this.startAt, this.numGuests, this.notes]
-    );
-    this.id = result.rows[0].id;
+        [this.customerId, this.startAt, this.numGuests, this.notes]
+      );
+      this.id = result.rows[0].id;
+    } else {
+      await db.query(
+        `UPDATE reservations SET start_at=$1, num_guests=$2, notes=$3 WHERE id=$4`,
+        [this.startAt, this.numGuests, this.notes, this.id]
+      );
+    }
   }
 }
 
