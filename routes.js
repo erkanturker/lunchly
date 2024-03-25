@@ -136,4 +136,35 @@ router.get("/getTopTen/", async function (req, res, next) {
   }
 });
 
+router.get("/:id/edit-reservation/:resId/", async (req, res, next) => {
+  try {
+    const resId = req.params.resId;
+    const reservation = await Reservation.getReservationByID(resId);
+    return res.render("edit_reservation.html", { reservation });
+  } catch (error) {
+    return next(error);
+  }
+});
+
+router.post("/:id/edit-reservation/:resId/", async (req, res, next) => {
+  try {
+    const resId = req.params.resId;
+    const reservation = await Reservation.getReservationByID(resId);
+
+    const startAt = new Date(req.body.startAt);
+    const numGuests = req.body.numGuests;
+    const notes = req.body.notes;
+
+    reservation.startAt = startAt;
+    reservation.numGuests = numGuests;
+    reservation.notes = notes;
+
+    reservation.save();
+
+    return res.redirect(`/${reservation.customerId}/`);
+  } catch (error) {
+    return next(error);
+  }
+});
+
 module.exports = router;

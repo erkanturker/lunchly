@@ -51,6 +51,9 @@ class Reservation {
   getformattedStartAt() {
     return moment(this.startAt).format("MMMM Do YYYY, h:mm a");
   }
+  getFormattedNormal() {
+    return moment(this.startAt).format("YYYY-MM-DD hh:mm a");
+}
 
   /** given a customer id, find their reservations. */
 
@@ -68,6 +71,21 @@ class Reservation {
 
     return results.rows.map((row) => new Reservation(row));
   }
+  static async getReservationByID(resId) {
+    const results = await db.query(
+      `SELECT id, 
+           customer_id AS "customerId", 
+           num_guests AS "numGuests", 
+           start_at AS "startAt", 
+           notes AS "notes"
+         FROM reservations 
+         WHERE id = $1`,
+      [resId]
+    );
+
+    return new Reservation(results.rows[0]);
+  }
+
   async save() {
     const result = await db.query(
       `INSERT INTO reservations (customer_id,start_at,num_guests,notes)
