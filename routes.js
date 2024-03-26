@@ -146,6 +146,17 @@ router.get("/:id/edit-reservation/:resId/", async (req, res, next) => {
   }
 });
 
+router.get("/:id/delete-reservation/:resId/", async (req, res, next) => {
+  try {
+    const resId = req.params.resId;
+    const reservation = await Reservation.getReservationByID(resId);
+    await reservation.remove();
+    return res.redirect(`/${reservation.customerId}/`);
+  } catch (error) {
+    return next(error);
+  }
+});
+
 router.post("/:id/edit-reservation/:resId/", async (req, res, next) => {
   try {
     const resId = req.params.resId;

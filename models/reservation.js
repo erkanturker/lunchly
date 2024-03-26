@@ -101,6 +101,10 @@ class Reservation {
       );
     }
   }
+
+  async remove() {
+    await db.query(`DELETE FROM reservations WHERE id=$1`, [this.id]);
+  }
 }
 
 module.exports = Reservation;

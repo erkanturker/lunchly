@@ -20,6 +20,11 @@
         <a href="/{{ customer.id }}/edit-reservation/{{reservation.id}}"
           >Edit</a
         >
+        <a
+          href="/{{ customer.id }}/delete-reservation/{{reservation.id}}"
+          class="text-danger"
+          >Delete</a
+        >
       </li>
       {% endfor %}
     </ul>
